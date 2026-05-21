@@ -77,8 +77,10 @@ sudo dnf install -y snapper libdnf5-plugin-actions btrfs-assistant inotify-tools
 
 step "Configuring Snapper for / ..."
 
-# Create root config if not already present
-if [ ! -d /.snapshots ]; then
+# Create root config if not already present.
+# Check the snapper config directly — not the directory — because /.snapshots
+# may exist from a previous failed run without a valid config behind it.
+if ! sudo snapper -c root get-config &>/dev/null; then
     sudo snapper -c root create-config /
 fi
 
